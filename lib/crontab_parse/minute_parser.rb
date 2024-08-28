@@ -28,12 +28,12 @@ module CrontabParse
 
       attr_accessor :expression
 
-      def parse_stepped_expression
+      def parse_stepped_expression(expression)
         step = expression.match(STEPPED_REGEXP)[:step].to_i
         VALID_RANGE.step(step).to_a
       end
 
-      def stepped?
+      def stepped?(expression)
         expression.match?(STEPPED_REGEXP)
       end
 
