@@ -1,19 +1,37 @@
 # frozen_string_literal: true
 
 RSpec.describe CrontabParse do
+  describe ".parse" do
+    context "Simple Schedules" do
+      let(:crontab) { '* * * * * /bin/echo "Hello, world!"' }
 
-  describe '.parse' do
-    context 'Simple Schedules' do
-      let(:crontab) { '* * * * * /bin/echo "Hello, world!"'  }
-      it 'successfuly parses the crontab' do
+      it "successfuly parses the crontab" do
         expect(described_class.parse(crontab))
           .to eq(
-                minutes: (0..59).to_a,
+            minutes: (0..59).to_a,
+            hours: (0..23).to_a,
+            day_of_month: (1..31).to_a,
+            months: (1..12).to_a,
+            day_of_week: (1..7).to_a
+          )
+      end
+
+      describe "parses minutes" do
+        let(:minute) { rand(0..59) }
+        let(:crontab) { "#{minute} * * * * /bin/echo \"Hello, world!\"" }
+
+        context "when given a valie numerical minute" do
+          it "parses the minute" do
+            expect(described_class.parse(crontab))
+              .to eq(
+                minutes: [minute],
                 hours: (0..23).to_a,
                 day_of_month: (1..31).to_a,
                 months: (1..12).to_a,
                 day_of_week: (1..7).to_a
               )
+          end
+        end
       end
     end
   end
