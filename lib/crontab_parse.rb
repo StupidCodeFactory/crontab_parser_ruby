@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 require_relative "crontab_parse/version"
+require "crontab_parse/minute_parser"
 
 module CrontabParse
-
   class Parser
-
     CRONTAB_PARTS_MINUTES_INDEX = 0
 
     def initialize(crontab_expression)
@@ -13,14 +12,15 @@ module CrontabParse
     end
 
     def minutes
-      [crontabs_parts[CRONTAB_PARTS_MINUTES_INDEX].to_i]
+      @minutes ||= MinuteParser.new(crontabs_parts[CRONTAB_PARTS_MINUTES_INDEX]).parse
     end
 
     private
+
     attr_accessor :crontab_expression
 
     def crontabs_parts
-      @crontabs_parts ||= crontab_expression.split(/\W/)
+      @crontabs_parts ||= crontab_expression.split(/ /)
     end
   end
 
