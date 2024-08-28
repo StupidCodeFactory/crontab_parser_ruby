@@ -2,6 +2,7 @@
 
 require_relative "crontab_parse/version"
 require "crontab_parse/minute_parser"
+require "crontab_parse/hour_parser"
 
 module CrontabParse
   class Parser

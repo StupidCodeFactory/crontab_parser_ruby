@@ -17,8 +17,18 @@ RSpec.describe CrontabParse do
       end
 
       describe "parses minutes" do
-        let(:crontab) { "#{minute} * * * * /bin/echo \"Hello, world!\"" }
+        let(:crontab) { "*/14 * * * * /bin/echo \"Hello, world!\"" }
 
+        it "successfuly parses the crontab" do
+          expect(described_class.parse(crontab))
+            .to eq(
+                  minutes: [0, 14, 28, 42, 56],
+                  hours: (0..23).to_a,
+                  day_of_month: (1..31).to_a,
+                  months: (1..12).to_a,
+                  day_of_week: (1..7).to_a
+                )
+        end
       end
     end
   end
