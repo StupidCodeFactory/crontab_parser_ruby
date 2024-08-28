@@ -2,7 +2,7 @@
 
 RSpec.describe CrontabParse do
 
-  describe .parse do
+  describe '.parse' do
     context 'Simple Schedules' do
       let(:crontab) { '* * * * * /bin/echo "Hello, world!"'  }
       it 'successfuly parses the crontab' do
