@@ -7,4 +7,5 @@ gemspec
 
 gem "ruby-lsp"
 
+gem "debug"
 gem "rubocop", "~> 1.21"

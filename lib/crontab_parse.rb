@@ -6,25 +6,25 @@ require "crontab_parse/hour_parser"
 require "crontab_parse/parsers"
 
 module CrontabParse
-  class Parser
-    CRONTAB_PARTS_MINUTES_INDEX = 0
+  # class Parser
+  #   CRONTAB_PARTS_MINUTES_INDEX = 0
 
-    def initialize(crontab_expression)
-      self.crontab_expression = crontab_expression
-    end
+  #   def initialize(crontab_expression)
+  #     self.crontab_expression = crontab_expression
+  #   end
 
-    def minutes
-      @minutes ||= MinuteParser.new(crontabs_parts[CRONTAB_PARTS_MINUTES_INDEX]).parse
-    end
+  #   def minutes
+  #     @minutes ||= MinuteParser.new(crontabs_parts[CRONTAB_PARTS_MINUTES_INDEX]).parse
+  #   end
 
-    private
+  #   private
 
-    attr_accessor :crontab_expression
+  #   attr_accessor :crontab_expression
 
-    def crontabs_parts
-      @crontabs_parts ||= crontab_expression.split(/ /)
-    end
-  end
+  #   def crontabs_parts
+  #     @crontabs_parts ||= crontab_expression.split(/ /)
+  #   end
+  # end
 
   class << self
     def parse(crontab_expression)
