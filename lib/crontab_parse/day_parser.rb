@@ -1,6 +1,6 @@
 require "crontab_parse/part_parser"
 require "crontab_parse/parser_error"
-require "crontab_parse/day_string_parser"
+require "crontab_parse/parser_types/day_string_parser"
 module CrontabParse
   class DayParser < PartParser
 

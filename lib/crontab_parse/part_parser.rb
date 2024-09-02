@@ -1,12 +1,11 @@
-require "crontab_parse/range_parser"
-require "crontab_parse/step_parser"
-require "crontab_parse/list_parser"
-require "crontab_parse/wildcard_parser"
-require "crontab_parse/digit_parser"
+require "crontab_parse/parser_types/range_parser"
+require "crontab_parse/parser_types/step_parser"
+require "crontab_parse/parser_types/list_parser"
+require "crontab_parse/parser_types/wildcard_parser"
+require "crontab_parse/parser_types/digit_parser"
 
 module CrontabParse
   class PartParser
-
     def initialize(
           valid_range: ,
           range_parser_class: RangeParser,

@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 require "crontab_parse/part_parser"
-require "crontab_parse/month_string_parser"
+require "crontab_parse/parser_types/month_string_parser"
 require "crontab_parse/parser_error"
 
 module CrontabParse
   class MonthParser < PartParser
-
     def initialize(valid_range: (1..12))
       super
     end

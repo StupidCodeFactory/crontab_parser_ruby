@@ -6,35 +6,26 @@ require "crontab_parse/hour_parser"
 require "crontab_parse/parsers"
 
 module CrontabParse
-  # class Parser
-  #   CRONTAB_PARTS_MINUTES_INDEX = 0
-
-  #   def initialize(crontab_expression)
-  #     self.crontab_expression = crontab_expression
-  #   end
-
-  #   def minutes
-  #     @minutes ||= MinuteParser.new(crontabs_parts[CRONTAB_PARTS_MINUTES_INDEX]).parse
-  #   end
-
-  #   private
-
-  #   attr_accessor :crontab_expression
-
-  #   def crontabs_parts
-  #     @crontabs_parts ||= crontab_expression.split(/ /)
-  #   end
-  # end
+  MINUTES_INDEX       = 0
+  HOURS_INDEX         = 1
+  DAYS_OF_MONTH_INDEX = 2
+  MONTHS_INDEX        = 3
+  DAYS_OF_WEEK_INDEX  = 4
+  COMMAND_INDEX       = 5
 
   class << self
     def parse(crontab_expression)
-      parser = Parser.new(crontab_expression)
+      parts = crontab_expression.split(/ /)
+
+      raise ArgumentError, "invalid crontab expression: [#{crontab_expression}]" unless parts.size > 5
+
       {
-        minutes: parser.minutes,
-        hours: (0..23).to_a,
-        day_of_month: (1..31).to_a,
-        months: (1..12).to_a,
-        day_of_week: (1..7).to_a
+        minutes: Parsers.parse_minute(parts[MINUTES_INDEX]),
+        hours: Parsers.parse_hour(parts[HOURS_INDEX]),
+        days_of_month: Parsers.parse_day_of_month(parts[DAYS_OF_MONTH_INDEX]),
+        months: Parsers.parse_month(parts[MONTHS_INDEX]),
+        days_of_week: Parsers.parse_day(parts[DAYS_OF_WEEK_INDEX]),
+        command: parts[COMMAND_INDEX..].join(" ")
       }
     end
   end

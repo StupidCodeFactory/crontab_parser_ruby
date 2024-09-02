@@ -2,7 +2,7 @@
 
 RSpec.describe CrontabParse do
   describe ".parse" do
-    context "Simple Schedules" do
+    context "with a valid expresssion" do
       let(:crontab) { '* * * * * /bin/echo "Hello, world!"' }
 
       it "successfuly parses the crontab" do
@@ -10,24 +10,28 @@ RSpec.describe CrontabParse do
           .to eq(
             minutes: (0..59).to_a,
             hours: (0..23).to_a,
-            day_of_month: (1..31).to_a,
+            days_of_month: (1..31).to_a,
             months: (1..12).to_a,
-            day_of_week: (1..7).to_a
+            days_of_week: (0..6).to_a,
+            command: '/bin/echo "Hello, world!"'
           )
       end
+    end
 
-      describe "parses minutes" do
-        let(:crontab) { "*/14 * * * * /bin/echo \"Hello, world!\"" }
+    context "with an invalid expresssion" do
+      context "when the crontab does not have enough parts" do
+        let(:crontab) { '* * * *' }
 
-        it "successfuly parses the crontab" do
-          expect(described_class.parse(crontab))
-            .to eq(
-              minutes: [0, 14, 28, 42, 56],
-              hours: (0..23).to_a,
-              day_of_month: (1..31).to_a,
-              months: (1..12).to_a,
-              day_of_week: (1..7).to_a
-            )
+        specify do
+          expect { described_class.parse(crontab) }.to raise_error ArgumentError, "invalid crontab expression: [#{crontab}]"
+        end
+      end
+
+      context "when the crontab contains invalid part" do
+        let(:crontab) { '*/60 * * * * /bin/echo "Hello, world!"' }
+
+        specify do
+          expect { described_class.parse(crontab) }.to raise_error CrontabParse::ParserError, "Invalid minute value: [*/60]. Valid minute values are integers between 0 and 59."
         end
       end
     end
