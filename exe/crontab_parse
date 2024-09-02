@@ -1,3 +1,49 @@
 #!/usr/bin/env ruby
 
+$LOAD_PATH.unshift(File.expand_path(File.join(__dir__, '../lib')))
 require "crontab_parse"
+
+argument = ARGV.first
+
+def print_usage
+    usage = <<-USAGE
+    crontab_parse "* * * * * /bin/echo "Hello, world!"
+
+    contrab_parse -h --help print usage
+USAGE
+    print(usage)
+end
+
+print_usage && exit(0) if %w[ -h --help].include?(argument)
+
+print_usage && exit(1) if argument.nil?
+
+results = CrontabParse.parse(argument)
+
+class Renderer
+  def initialize(results)
+    self.results = results
+  end
+
+  def render
+    padding = formatted.keys.map(&:length).max
+    formatted.each do |time_part, values|
+      puts [time_part.ljust(padding), values].join(" ")
+    end
+  end
+
+  private
+  attr_accessor :results
+
+  def formatted
+    @formatted ||= results.each_with_object({}) do |(time_part, values), object|
+      object[label_for(time_part)] = values.join(" ")
+    end
+  end
+
+  def label_for(time_part)
+    time_part.to_s.gsub(/_/, " ")
+  end
+end
+
+Renderer.new(results).render

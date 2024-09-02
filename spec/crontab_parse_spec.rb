@@ -8,12 +8,12 @@ RSpec.describe CrontabParse do
       it "successfuly parses the crontab" do
         expect(described_class.parse(crontab))
           .to eq(
-            minutes: (0..59).to_a,
-            hours: (0..23).to_a,
-            days_of_month: (1..31).to_a,
-            months: (1..12).to_a,
-            days_of_week: (0..6).to_a,
-            command: '/bin/echo "Hello, world!"'
+            minute: (0..59).to_a,
+            hour: (0..23).to_a,
+            day_of_month: (1..31).to_a,
+            month: (1..12).to_a,
+            day_of_week: (0..6).to_a,
+            command: ['/bin/echo "Hello, world!"']
           )
       end
     end
