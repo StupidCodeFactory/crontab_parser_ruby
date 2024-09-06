@@ -98,5 +98,11 @@ RSpec.describe CrontabParse::DayParser do
         end
       end
     end
+
+    context "when given a rand with 3 letters day name" do
+      it "parses the range of day of week" do
+        expect(subject.parse("MON-FRI")).to eq([1, 2, 3, 4, 5])
+      end
+    end
   end
 end

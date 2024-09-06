@@ -1,6 +1,28 @@
 # frozen_string_literal: true
 
 RSpec.describe CrontabParse do
+
+  describe ".parse_args" do
+    let(:crontab) { '* * * * * /bin/echo "Hello, world!"' }
+
+    context "when given no option" do
+      let(:argv) { [crontab] }
+
+      it "returns the crontab expression" do
+        expect(described_class.parse_args(argv)).to eq(argv)
+      end
+    end
+
+    context "when given and option" do
+      let(:argv) { [crontab, "-c"] }
+
+      it "returns the crontab and parsed arguments" do
+        expect(described_class.parse_args(argv))
+          .to eq([crontab, { optional: true }])
+      end
+    end
+  end
+
   describe ".parse" do
     context "with a valid expresssion" do
       let(:crontab) { '* * * * * /bin/echo "Hello, world!"' }
@@ -15,6 +37,11 @@ RSpec.describe CrontabParse do
             day_of_week: (0..6).to_a,
             command: ['/bin/echo "Hello, world!"']
           )
+      end
+
+      context "when adding an optional flag" do
+        let(:crontab) { '* * * * * /bin/echo "Hello, world!"' }
+
       end
     end
 

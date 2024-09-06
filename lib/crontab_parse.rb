@@ -14,6 +14,23 @@ module CrontabParse
   COMMAND_INDEX      = 5
 
   class << self
+    def parse_args(argv)
+      return argv if argv.size < 2
+
+      crontab = argv.first
+      arguments = argv[1..-1]
+
+      config = arguments.each_with_object({}) do |argument, config|
+        case argument
+        when '-c'
+          config[:optional] = true
+        else
+          puts "Invalid argument: [#{argument}]"
+        end
+      end
+      [crontab, config]
+    end
+
     def parse(crontab_expression)
       parts = crontab_expression.split(/ /)
 

@@ -3,7 +3,7 @@
 $LOAD_PATH.unshift(File.expand_path(File.join(__dir__, '../lib')))
 require "crontab_parse"
 
-argument = ARGV.first
+argument, config = CrontabParse.parse_args(ARGV)
 
 def print_usage
     usage = <<-USAGE
@@ -21,11 +21,12 @@ print_usage && exit(1) if argument.nil?
 results = CrontabParse.parse(argument)
 
 class Renderer
-  def initialize(results)
+  def initialize(results, config = {})
     self.results = results
+    self.config = config
   end
 
-  def render
+  def render()
     padding = formatted.keys.map(&:length).max
     formatted.each do |time_part, values|
       puts [time_part.ljust(padding), values].join(" ")
@@ -33,7 +34,7 @@ class Renderer
   end
 
   private
-  attr_accessor :results
+  attr_accessor :results, :config
 
   def formatted
     @formatted ||= results.each_with_object({}) do |(time_part, values), object|
@@ -42,8 +43,11 @@ class Renderer
   end
 
   def label_for(time_part)
-    time_part.to_s.gsub(/_/, " ")
+    label = time_part.to_s.gsub(/_/, " ")
+    return label.upcase if config[:optional]
+
+    label
   end
 end
 
-Renderer.new(results).render
+Renderer.new(results, config).render
